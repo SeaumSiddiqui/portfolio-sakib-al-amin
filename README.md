@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Client portfolio
 
-## Getting Started
+Portfolio for a motion, 3D and graphic designer. Light grey canvas, black "instrument" panels, mono HUD labels — the work is the only colour.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · GSAP (CustomEase, ScrollTrigger) · Lenis · React Three Fiber + drei · hls.js · Sanity 6 (Studio at `/studio`)
+
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # optional until Sanity is connected
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Without a Sanity project ID the site runs on the placeholder content in `src/content/fallback.ts`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Connect Sanity
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a project at [sanity.io/manage](https://www.sanity.io/manage) and put its ID in `.env.local` as `NEXT_PUBLIC_SANITY_PROJECT_ID`.
+2. In the project's **API → CORS origins**, add `http://localhost:3000` (and the production URL) with **Allow credentials** on.
+3. Restart `npm run dev` and open `/studio`. Fill in **Site settings**, **About**, then add **Projects** and **Services**.
+4. Optional: create an **Editor** token and set `SANITY_API_WRITE_TOKEN` so the enquiry form saves submissions under **Enquiries**.
 
-## Learn More
+Content is cached for 60 seconds (`REVALIDATE_SECONDS` in `src/lib/data.ts`). Any field left empty falls back to the placeholder value.
 
-To learn more about Next.js, take a look at the following resources:
+## Where things live
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Path | What |
+|---|---|
+| `src/styles/tokens.css` | **Every design token**: colours, type scale, radii, easing, durations, grain, grid curve. Tailwind utilities and GSAP both read from here. |
+| `src/styles/components.css` | Shared component classes (`.label`, `.instrument`, `.chip`, `.segment`, `.highlight-bars`, `.grain`). |
+| `src/app/fonts.ts` | Font loading. Swap to Neue Haas Display + PP Supply Mono via `next/font/local` once licensed. |
+| `src/lib/motion.ts` | GSAP setup; builds its eases from the CSS tokens. |
+| `src/components/frame/` | Persistent HUD: status bar + live clock, showreel/booking chips, menu, preloader, full-screen film player. |
+| `src/components/home/WorkStrip.tsx` | Self-playing home strip (drag / wheel to nudge). |
+| `src/components/work/CurvedGrid.tsx` | Endless curved project grid (drag, wheel, arrow keys). Flat grid on phones. |
+| `src/components/project/` | Project hero, render-pass breakdown, real-time 3D turntable. |
+| `src/components/services/ProcessDiagram.tsx` | Services diagram that draws on scroll. |
+| `src/sanity/` | Schemas, Studio structure, client, GROQ queries. |
+| `src/lib/data.ts` | Data access with fallback to placeholder content. |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Media
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Each media field takes an image, an uploaded video, or a video URL (`.mp4`, or HLS `.m3u8` e.g. from Mux). Card loops should be short, muted and under ~4 MB. 3D model sections take a `.glb`.
