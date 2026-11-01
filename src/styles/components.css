@@ -1,0 +1,136 @@
+/*
+ * Shared component styles. Every value comes from tokens.css.
+ * Page-level layout uses Tailwind utilities; anything reused lives here.
+ */
+
+@layer components {
+  /* Mono HUD label: 11px uppercase */
+  .label {
+    font-family: var(--font-mono);
+    font-size: var(--text-hud);
+    line-height: var(--text-hud--line-height);
+    letter-spacing: var(--text-hud--letter-spacing);
+    text-transform: uppercase;
+  }
+
+  /* Black instrument panel (status bar, chips, control bars) */
+  .instrument {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    border-radius: var(--radius-sm);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: var(--chip-height);
+    padding: 0 12px;
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    border-radius: var(--radius-sm);
+    transition: background-color calc(var(--dur-fast) * 1s) var(--ease-expo);
+  }
+  .chip:hover {
+    background: var(--color-panel);
+  }
+
+  /* Segmented control inside an instrument panel */
+  .segment {
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: var(--radius-xs);
+    color: var(--color-on-ink);
+    cursor: pointer;
+    transition: background-color calc(var(--dur-fast) * 1s), color calc(var(--dur-fast) * 1s);
+  }
+  .segment[aria-pressed="true"] {
+    background: var(--color-on-ink);
+    color: var(--color-ink);
+  }
+
+  /* Headline set on black highlight bars, line by line */
+  .highlight-bars {
+    font-family: var(--font-display);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .highlight-bars > span {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+    padding: 0 0.14em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .ui-title {
+    font-family: var(--font-display);
+    font-size: var(--text-ui);
+    line-height: var(--text-ui--line-height);
+    letter-spacing: var(--text-ui--letter-spacing);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .light-panel {
+    background: var(--color-card);
+    border: 1px solid var(--color-hairline);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Endless horizontal ticker (content is rendered twice) */
+  .marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 24s linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Home panel text: statement and client names */
+  .panel-type {
+    font-family: var(--font-display);
+    font-size: var(--text-panel);
+    line-height: var(--text-panel--line-height);
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--color-wire);
+  }
+
+  /* Animated film grain over everything */
+  .grain {
+    position: fixed;
+    inset: -50%;
+    z-index: 90;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: grain-shift 0.6s steps(6) infinite;
+  }
+
+  @keyframes grain-shift {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-5%, 3%); }
+    40% { transform: translate(4%, -6%); }
+    60% { transform: translate(-3%, 5%); }
+    80% { transform: translate(6%, 2%); }
+    100% { transform: translate(0, 0); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .marquee-track {
+    animation: none;
+  }
+}

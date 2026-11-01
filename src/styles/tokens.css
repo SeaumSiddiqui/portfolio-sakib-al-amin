@@ -1,0 +1,121 @@
+/*
+ * DESIGN TOKENS — the single source of truth for the whole site.
+ * Every colour, font, size, radius, spacing and motion value lives here.
+ * Tailwind v4 turns each @theme token into a utility (bg-canvas, text-ink,
+ * font-mono, rounded-sm, ease-expo…), and components.css + motion.ts read
+ * the same variables. Change a value here and it changes everywhere.
+ * `static`: always output every token as a CSS variable, even ones only read
+ * through var() in components.css or JS (Tailwind would otherwise drop them).
+ */
+
+@theme static {
+  /* ── Colour ─────────────────────────────────────────────── */
+  --color-canvas: #f2f2f4; /* page background */
+  --color-canvas-2: #e2e2e7; /* recessed panels, diagram ground */
+  --color-card: #ffffff; /* raised light panels */
+  --color-hairline: #d9d9de; /* guide lines, dividers on light */
+  --color-ink: #121212; /* text on light, HUD panels */
+  --color-panel: #1e1e1e; /* secondary dark surface */
+  --color-panel-line: #2d2f2f; /* dividers on dark */
+  --color-on-ink: #ececec; /* text on dark */
+  --color-muted: #646c6c; /* mono labels on light (5:1 on canvas) */
+  --color-muted-dark: #8a9393; /* mono labels on dark (5.6:1 on ink) */
+  --color-ink-soft: #3a3f3f; /* secondary body copy on light */
+  --color-wire: #494d4d; /* wireframes, diagram strokes */
+  --color-error: #a3261b; /* form errors (6.5:1 on white) */
+
+  /* ── Radius ─────────────────────────────────────────────── */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+
+  /* ── Type scale ─────────────────────────────────────────── */
+  --text-hud: 11px; /* mono HUD labels */
+  --text-hud--line-height: 1.5;
+  --text-hud--letter-spacing: 0.025em;
+  --text-body: 17px;
+  --text-body--line-height: 1.45;
+  --text-ui: 29px; /* menu items, section titles */
+  --text-ui--line-height: 1;
+  --text-ui--letter-spacing: -0.025em;
+  --text-panel: 18px; /* home panel statement + client names */
+  --text-panel--line-height: 16px;
+  --text-statement: clamp(26px, 2.2vw, 34px);
+  --text-statement--line-height: 0.98;
+  --text-display: clamp(48px, 6.4vw, 104px);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.035em;
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1); /* reveals, panels */
+  --ease-quart: cubic-bezier(0.76, 0, 0.24, 1); /* page + menu moves */
+}
+
+/* Fonts come from next/font (see src/app/fonts.ts). To use the licensed
+ * pair, load Neue Haas Display + PP Supply Mono there and keep these names. */
+@theme inline {
+  --font-display: var(--font-display-face), "Neue Haas Display", system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), "PP Supply Mono", ui-monospace, monospace;
+}
+
+:root {
+  /* Layout */
+  --gutter: 16px;
+  --hud-height: 28px;
+  --chip-height: 40px;
+  --frame-bottom: 72px; /* space reserved for the bottom controls */
+
+  /* Home strip — unitless vw so motion code can read them.
+   * Three cards fill the width edge to edge: side + gap + centre + gap + side = 100. */
+  --strip-center-w: 37;
+  --strip-center-h: 21.2;
+  --strip-side-h: 18.7;
+  --strip-gap: 2.55;
+  --strip-interval: 4.5; /* seconds between auto-advances */
+
+  /* Home statement panel */
+  --panel-width: 35.5vw;
+  --panel-height: 81px;
+  --panel-bottom: 114px;
+
+  /* Home scene: the hero on a 12-column grid, then the scroll transition into the work strip */
+  --scene-margin: 32px;
+  --cell: calc((100vw - 2 * var(--scene-margin)) / 12); /* one grid column */
+  --scene-travel: 110; /* vh of scroll the transition takes */
+  --scene-hold: 35; /* vh of calm scroll after it, before the page ends */
+  --hero-size: 9.6vw; /* name lines */
+  --hero-l1: 2.3; /* where each name line starts, in grid columns */
+  --hero-l2: 4.85;
+  --hero-l3: 4.85;
+  --hero-portrait-col: 9.9;
+  --hero-portrait-w: 1.6;
+
+  /* Motion durations (seconds — read by src/lib/motion.ts too) */
+  --dur-fast: 0.3;
+  --dur-base: 0.7;
+  --dur-slow: 1.2;
+
+  /* Texture */
+  --grain-opacity: 0.06;
+
+  /* Curved work grid */
+  --grid-perspective: 1100px;
+  --grid-curve: 0.62; /* sphere radius as a multiple of viewport width */
+}
+
+@media (max-width: 767px) {
+  :root {
+    --gutter: 12px;
+    --frame-bottom: 72px;
+    --strip-center-w: 74;
+    --strip-center-h: 52;
+    --strip-side-h: 44;
+    --strip-gap: 3;
+    --scene-margin: 20px;
+    --hero-size: 15.5vw;
+    --hero-l1: 0;
+    --hero-l2: 3;
+    --hero-l3: 0;
+    --hero-portrait-col: 7.6;
+    --hero-portrait-w: 4.2;
+  }
+}
